@@ -4,7 +4,7 @@ import (
     "net/http"
     "strings"
 
-    "kakeibo/config"
+    "github.com/kariyana/kakeibo-api/config"
 
     "github.com/gin-gonic/gin"
     "github.com/golang-jwt/jwt/v4"
@@ -23,7 +23,7 @@ func AuthJWT() gin.HandlerFunc {
 
         // トークン解析
         token, err := jwt.ParseWithClaims(tokenString, &config.Claims{}, func(t *jwt.Token) (interface{}, error) {
-            return []byte(config.JWTSecret), nil
+            return []byte(config.Cfg.JWTSecret), nil
         })
         if err != nil {
             c.JSON(http.StatusUnauthorized, gin.H{"message": "不正なトークンです。"})

@@ -5,16 +5,17 @@ import (
     "io/ioutil"
     "net/http"
     "os"
-    "strings"
+    // "strings"
     "time"
 
-    "kakeibo/config"
-    "kakeibo/models"
+    "github.com/kariyana/kakeibo-api/config"
+    "github.com/kariyana/kakeibo-api/models"
 
     "github.com/gin-gonic/gin"
     "github.com/golang-jwt/jwt/v4"
     "golang.org/x/crypto/bcrypt"
     "golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
     _ "github.com/joho/godotenv/autoload"
 )
 
@@ -93,7 +94,7 @@ func Login(c *gin.Context) {
         },
     }
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    tokenString, err := token.SignedString([]byte(config.JWTSecret))
+    tokenString, err := token.SignedString([]byte(config.Cfg.JWTSecret))
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "トークン生成に失敗しました。"})
         return
@@ -159,7 +160,7 @@ func GoogleCallback(c *gin.Context) {
         },
     }
     authToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    tokenString, err := authToken.SignedString([]byte(config.JWTSecret))
+    tokenString, err := authToken.SignedString([]byte(config.Cfg.JWTSecret))
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "トークン生成に失敗しました。"})
         return

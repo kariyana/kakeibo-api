@@ -1,4 +1,4 @@
-# .air.toml
+# .air.toml (シンプル版)
 root = "."
 tmp_dir = "tmp"
 
@@ -6,7 +6,6 @@ tmp_dir = "tmp"
   time = true
 
 [build]
-  cmd = "go build -o main ."
+  cmd = "go run main.go"
   include_ext = ["go", "tpl", "tmpl", "html"]
   exclude_dir = ["assets", "tmp", "vendor"]
-  bin = "main"

@@ -12,22 +12,11 @@ WORKDIR /app
 COPY go.mod ./
 COPY go.sum ./
 
-# main.go だけ先にコピー（go mod tidy に必要な import を含む）
-# または全体の .go ファイル群の中の import に依存するものをコピー
-COPY main.go ./
-
-# 一部の依存関係を含むディレクトリも先にコピー（必要に応じて）
-COPY config/ ./config/
-COPY controllers/ ./controllers/
-COPY routers/ ./routers/
-COPY middlewares/ ./middlewares/
-COPY models/ ./models/
+# アプリケーションソースをコピー
+COPY . .
 
 # 依存関係を解決し、go.sum を整える
 RUN go mod tidy
-
-# アプリケーションソースをコピー
-COPY . .
 
 # 静的リンクでビルド（軽量ランタイムと互換性あり）
 RUN CGO_ENABLED=0 GOOS=linux go build -o app main.go

@@ -2,10 +2,10 @@ package controllers
 
 import (
     "net/http"
-    "time"
+    // "time"
 
-    "kakeibo/config"
-    "kakeibo/models"
+    "github.com/kariyana/kakeibo-api/config"
+    "github.com/kariyana/kakeibo-api/models"
 
     "github.com/gin-gonic/gin"
 )

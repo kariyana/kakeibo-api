@@ -15,10 +15,12 @@ RUN go install github.com/cosmtrek/air@v1.49.0
 # go.mod & go.sum を先にコピーして依存を解決（キャッシュ利用のため）
 COPY go.mod ./
 COPY go.sum ./
-RUN go mod tidy
 
 # ソースコードをコピー
 COPY . .
+
+# 依存関係を解決し、go.sum を整える
+RUN go mod tidy
 
 # PATHを通す（go installは /go/bin にバイナリを作成する）
 ENV PATH="/go/bin:${PATH}"

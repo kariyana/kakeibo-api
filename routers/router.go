@@ -1,8 +1,8 @@
 package routers
 
 import (
-    "kakeibo/controllers"
-    "kakeibo/middlewares"
+    "github.com/kariyana/kakeibo-api/controllers"
+    "github.com/kariyana/kakeibo-api/middlewares"
 
     "github.com/gin-gonic/gin"
 )
@@ -16,6 +16,12 @@ func SetupRouter() *gin.Engine {
     router.POST("/login", controllers.Login)
     router.GET("/auth/google", controllers.GoogleLogin)
     router.GET("/auth/google/callback", controllers.GoogleCallback)
+	// 動作確認用の簡単なAPI
+    router.GET("/ping", func(c *gin.Context) {
+        c.JSON(200, gin.H{
+            "message": "pong",
+        })
+    })
 
     // JWT認証が必要なルート
     auth := router.Group("/")

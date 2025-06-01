@@ -1,11 +1,10 @@
 package main
-
 import (
     "fmt"
 
-    "kakeibo/config"
-    "kakeibo/models"
-    "kakeibo/routers"
+    "github.com/kariyana/kakeibo-api/config"
+    "github.com/kariyana/kakeibo-api/models"
+    "github.com/kariyana/kakeibo-api/routers"
 
     "golang.org/x/crypto/bcrypt"
 )
@@ -45,5 +44,5 @@ func main() {
 
     // ルーター設定・起動
     r := routers.SetupRouter()
-    r.Run() // デフォルトで :8080
+    r.Run("0.0.0.0:8080")
 }

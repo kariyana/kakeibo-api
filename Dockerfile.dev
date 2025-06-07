@@ -9,6 +9,9 @@ WORKDIR /app
 # 必要なパッケージをインストール
 RUN apk add --no-cache git ca-certificates curl
 
+# tmpディレクトリを作成（airのビルド出力先）
+RUN mkdir -p tmp
+
 # air のインストール
 RUN go install github.com/cosmtrek/air@v1.49.0
 

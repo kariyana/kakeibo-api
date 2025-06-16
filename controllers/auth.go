@@ -37,9 +37,9 @@ type Claims struct {
 // Signup は新規ユーザー登録を行います。
 func Signup(c *gin.Context) {
     var input struct {
-        Name     string `json:"name"`
+        UserName     string `json:"name"`
         Email    string `json:"email"`
-        Password string `json:"password"`
+        PasswordHash string `json:"password"`
     }
     if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"message": "パラメータが正しくありません。"})
@@ -52,12 +52,12 @@ func Signup(c *gin.Context) {
         return
     }
     // パスワードをハッシュ化して保存
-    hashed, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+    hashed, err := bcrypt.GenerateFromPassword([]byte(input.PasswordHash), bcrypt.DefaultCost)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "サーバーエラーが発生しました。"})
         return
     }
-    user := models.User{Name: input.Name, Email: input.Email, Password: string(hashed)}
+    user := models.User{UserName: input.UserName, Email: input.Email, PasswordHash: string(hashed)}
     if err := config.DB.Create(&user).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "ユーザー登録に失敗しました。"})
         return
@@ -81,7 +81,7 @@ func Login(c *gin.Context) {
         return
     }
     // パスワード照合
-    if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+    if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.Password)); err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"message": "メールアドレスまたはパスワードが違います。"})
         return
     }
@@ -138,7 +138,7 @@ func GoogleCallback(c *gin.Context) {
     }
     var userInfo struct {
         Email string `json:"email"`
-        Name  string `json:"name"`
+        UserName  string `json:"name"`
     }
     if err := json.Unmarshal(data, &userInfo); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"message": "ユーザー情報の解析に失敗しました。"})
@@ -148,7 +148,7 @@ func GoogleCallback(c *gin.Context) {
     var user models.User
     if err := config.DB.Where("email = ?", userInfo.Email).First(&user).Error; err != nil {
         // 新規ユーザー作成（パスワードは空）
-        user = models.User{Name: userInfo.Name, Email: userInfo.Email, Password: ""}
+        user = models.User{UserName: userInfo.UserName, Email: userInfo.Email, PasswordHash: ""}
         config.DB.Create(&user)
     }
     // JWTトークン発行

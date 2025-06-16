@@ -3,7 +3,7 @@ package routers
 import (
     "github.com/kariyana/kakeibo-api/controllers"
     "github.com/kariyana/kakeibo-api/middlewares"
-
+    "net/http"
     "github.com/gin-gonic/gin"
 )
 
@@ -30,6 +30,13 @@ func SetupRouter() *gin.Engine {
         auth.POST("/kakeibo", controllers.CreateKakeibo)
         auth.GET("/kakeibo", controllers.GetKakeibos)
     }
+
+    router.LoadHTMLGlob("templates/*")
+    router.GET("/test-api", func(c *gin.Context) {
+    c.HTML(http.StatusOK, "index.tmpl", gin.H{
+      "title": "Main website",
+    })
+  })
 
     return router
 }
